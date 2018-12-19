@@ -40,24 +40,40 @@ As Lightroom only calls two APIs, we can restrict the Google Maps API key to the
 
 ### 3. Locate and backup the Lightroom Map module
 
-On Windows 10, Lightroom 6, 64-bit: /Program Files/Adobe/Lightroom/Location.lrmodule
+On Windows 10, Lightroom 6, 64-bit: `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
 
 Make a back-up copy of the file Location.lrmodule.
 
-### 5. Extract the Lua files for patching
+### 4. Extract the Lua files for patching
 
 Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
-- Open Location.lrmodule with Resource Hacker
-- Expand the section LUA
-- Export LOCATIONMAPVIEW.LUA
-- Export AGREVERSEGEOCODESERVICE.LUA (optional)
+- Open `Location.lrmodule` with Resource Hacker
+- Expand the section `LUA`
+- Export `LOCATIONMAPVIEW.LUA`
+- Export `AGREVERSEGEOCODESERVICE.LUA` (optional)
 
-### 6. Patch Lua files with your Google Maps API key
+### 5. Patch Lua files with your Google Maps API key
 
 If you haven't already, install Python 3.
-For each Lua file, use the patchluastr.py to replace Adobe's key with your personal Google Maps API key.
-patchluastr original-file "client=gme-adobesystems" "key={your-api-key}" {patched-file-name}.bin
 
-### 7. Update Lightroom Map module with patched Lua files
+For each Lua file, use [patchluastr.py]() to replace Adobe's key with your personal Google Maps API key.
+```
+patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" {patched-file-name}.bin
+```
+
+### 6. Update Lightroom Map module with patched Lua files
 
 Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
+- Open `Location.lrmodule` with Resource Hacker
+- Expand the section `LUA`
+- Replace `LOCATIONMAPVIEW.LUA` with patched file
+- Replace `AGREVERSEGEOCODESERVICE.LUA` with patched file (optional)
+- Save `Location.lrmodule`
+
+The patched version of Location.lrmodule may be significantly smaller than the original. Don't worry :-)
+
+### 7. Enjoy!
+
+The Map module in your installation of Lightroom now works again.
+
+If you didn't enable Geo Coding API and/or didn't patch `AGREVERSEGEOCODE.LUA`, you will briefly see error messages. However, the basic map and geo tagging functionality will still work.
