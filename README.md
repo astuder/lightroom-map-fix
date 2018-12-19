@@ -16,9 +16,9 @@ Failing to protect your Google Maps API key may lead to unexpected charges to yo
 
 **WARRANTY VOID! We are NOT responsible for breaking your Lightroom installation. We are NOT responsible for any charges on your Google Cloud account.**
 
-## Why the Lightroom Map module stopped working
+## Why the Map module stopped working
 
-Earlier this year, Google revamped the pricing model for embedding Google Maps into 3rd party applications, changing from free access or flat fees to [transaction based pricing](https://cloud.google.com/maps-platform/pricing/sheet/). The number requests to the Google Maps APIs are counted, and after a threshold, a small fee is charged for every request.
+Earlier this year, Google revamped the pricing model for embedding Google Maps into 3rd party applications, changing from free access or flat fees to [transaction based pricing](https://cloud.google.com/maps-platform/pricing/sheet/). The number of requests to the Google Maps APIs are counted, and after a threshold, a small fee is charged for every request.
 
 Google's new pricing is not compatible with products that are licensed perpetually. With classic Lightroom, Adobe only got money once, but would have to pay Google each time you use the Map module. For Adobe, this is not a sustainable business model.
 
