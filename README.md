@@ -22,4 +22,4 @@ Earlier this year, Google revamped the pricing model for embedding Google Maps i
 
 Google's new pricing is not compatible with products that are licensed perpetually. With classic Lightroom, Adobe only got money once, but would have to pay Google each time you use the Map module. For Adobe, this is not a sustainable business model.
 
-The Google Maps API key embedded in Adobe Lightroom expired on November 30, 2018.
+The Google Maps API key embedded in old versions of Adobe Lightroom expired on November 30, 2018.
