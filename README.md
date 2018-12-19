@@ -1,4 +1,4 @@
-# Fixing the Lightroom Classic Map Module
+# Fixing the Map Module in Lightroom Classic
 
 As of December 1, 2018, the Map functionality in non-subscription versions of Lightroom stopped working. Adobe [suggests](https://helpx.adobe.com/lightroom/kb/map-view-no-longer-supported.html) buying a subscription to Lightroom CC (USD 120/year) or to copy & paste GPS coordinates into your favorite search engine (LOL!). 
 
