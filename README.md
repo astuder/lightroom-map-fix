@@ -4,9 +4,9 @@ As of December 1, 2018, the Map functionality in non-subscription versions of Li
 
 This project resurrects the lost functionality, without subscribing to Lightroom CC.
 
-To achieve this, we will modify Lightroom to use own personal Google Maps API key instead of Adobe's. While we need a subscription with Google, that subscription includes 200 USD of free use credits, which should be sufficient for casual users of the Lightroom Map module.
+To achieve this, we will modify Lightroom to use own personal Google Maps API key instead of Adobe's. While we need a subscription with Google, that subscription includes 200 USD of free use credits per month, which should be sufficient for casual users of the Lightroom Map module.
 
-Table of content
+### Table of contents
 - [Before you start READ THIS FIRST](#before-you-start-read-this-first)
 - [Step-by-step Procedure](#step-by-step-procedure)
 - [Technical Background](#technical-background)
@@ -25,7 +25,11 @@ Failing to protect your Google Maps API key may lead to unexpected charges to yo
 
 ## Step-by-step Procedure
 
+This procedure was developed and tested with Lightroom 6.14 on Windows 10. Other operating systems and versions of Lightroom might differ. Please let us know if you had success (or not) with other version of Lightroom. You can do so by opening an [issue](https://github.com/astuder/lightroom-map-fix/issues). We also welcome any contributions that refine this process.
+
 ### 1. Create your personal Google Maps API key
+
+You need to create your personal Google Maps API key.
 
 The first step in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
 
@@ -39,13 +43,15 @@ To add Geocoding, go to [APIs & Services > Library](https://console.cloud.google
 
 ![Screenshot of Google Maps API key restrictions](images/KeyRestrictions2.PNG)
 
-### 3. Locate and backup the Lightroom Map module
+### 3. Backup the Lightroom Map module
 
-For Lightroom 6 64-bit on Windows 10, the Map mdoule can be found at `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
+If Lightroom is still running, close it now.
 
-Make a back-up copy of the file Location.lrmodule and keep it in a safe place.
+Locate the application files of Lightroom, and look for a file called `Location.lrmodule`. This is the Lightroom Map module. Make a backup copy of this file and keep it in a safe place.
 
-### 4. Extract the Lua files for patching
+The location and the file name may vary with the operating system and version of Lightroom. For Lightroom 6 64-bit on Windows 10, the Map module can be found at `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
+
+### 4. Extract Lua files for patching
 
 Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
 - Open `Location.lrmodule` with Resource Hacker
@@ -71,9 +77,9 @@ The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker
 Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
 - Open `Location.lrmodule` with Resource Hacker
 - Expand the section `LUA`
-- On `LOCATIONMAPVIEW.LUA`, right-click and select *Replace Resource*, then click *Select File* and navigate to the patched Lua file.
-- On `AGREVERSEGEOCODESERVICE.LUA` right-click and select *Replace Resource*, then click *Select File* and navigate to the patched Lua file.
-- Save `Location.lrmodule` and copy it to its original location.
+- On `LOCATIONMAPVIEW.LUA`, right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*
+- On `AGREVERSEGEOCODESERVICE.LUA` right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*.
+- Save `Location.lrmodule`. Depending on permissions, you may have to use *Save as* and then copy the modified file back into `C:\Program Files\Adobe\Lightroom\`
 
 ![Screenshot of Resource Hacker with replace menu](images/ResourceHackerReplace.PNG)
 
