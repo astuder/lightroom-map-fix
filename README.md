@@ -26,6 +26,42 @@ Google's new pricing is not compatible with products that are licensed perpetual
 
 The Google Maps API key embedded in old versions of Adobe Lightroom expired on November 30, 2018.
 
+### Google Maps JavaScript API
+
+The [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial) allows to embed Google Maps into websites and applications.
+
+As of December 2018, Google Maps JavaScript API [costs 0.007 USD per map load](https://developers.google.com/maps/documentation/javascript/usage-and-billing) (USD 7 / 1000). Once a map is loaded, user interactions with the map, such as paning, zooming or switching map layers, do not generate additional map loads.
+
+The Lightroom Map module calls the Maps JavaScript API to show the map inside Lightroom. Access to this API is required for the Map module to work.
+
+Access to this API is implemented in the Lua resource LOCATIONMAPVIEW.LUA.
+
+### Google Geocoding API
+
+The Google Geocoding API allows applications to search locations and lookup place names based on GPS coordinates.
+
+As of December 2018, Google Geocoding API [costs 0.005 USD per request](https://developers.google.com/maps/documentation/geocoding/usage-and-billing) (5 USD / 1000).
+
+The Lightroom Map module calls the Geocoding API to display the place name of the currently selected image and when searching for a location. The Map module works without access to this API, but will briefly flashing an error message when entering the Map module and when switching between images.
+
+![Screenshot of place name on map in Lightroom](images/GeocodingMap.PNG)
+
+We observed multiple calls to the Geocoding API when entering the Map module. We also don't know, what other operations will create calls to this API. We recommend to keep a close eye on the usage reports available on the Google Cloud Platform. If in doubt or too costly, disable access to the Geocoding API by removing the service from the API restrictions under [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials/key).
+
+Access to this API is implemented in the Lua resource AGREVERSEGEOCODESERVICE.LUA.
+
+### Google billing
+
+Starting in 2018, Google requires an account on Google Cloud Platform that is enabled for billing. All Google Maps API transactions are charged against that account. Luckily for us, Google gives each account a monthly credit of 200 USD. Only transactions exceeding that limit will be billed to your credit card.
+
+Costs and terms of service may differ by country. Please carefully review details on [Google's website](https://developers.google.com/maps/billing/understanding-cost-of-use#billing-overview).
+
+200 USD is enough for over 28000 map loads or 40000 calls to the Geo Coding API, which should be enough for casual use of the Lightroom Map module. To avoid surprises, you can set [budgets](https://cloud.google.com/billing/docs/how-to/budgets) or [quotas](https://cloud.google.com/apis/docs/capping-api-usage). Budgets will send an email alert when a configured amount is exceeded, where as quotas will turn off the API.
+
+We recommend to configure a budget of 1 USD and a first alert at 10%. With this configuration, Google will send you an email if you spend more than 10 cents of your own money.
+
+![Screenshot of budget configuration](images/Budget.PNG)
+
 ## Step-by-step Procedure
 
 ### 1. Create your personal Google Maps API key
@@ -34,9 +70,11 @@ The first step in [this guide](https://developers.google.com/maps/documentation/
 
 ### 2. Restrict the Google Maps API key
 
-As Lightroom only calls two APIs, we can restrict the Google Maps API key to these to limit the risk of abuse.
+As Lightroom only calls two APIs, restrict the Google Maps API key to these services to limit the risk of abuse.
 - Google Maps JavaScript API
 - Geo Coding API (optional)
+
+![Screenshot of Google Maps API key restrictions](images/KeyRestrictions2.PNG)
 
 ### 3. Locate and backup the Lightroom Map module
 
