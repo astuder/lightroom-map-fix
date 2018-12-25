@@ -67,7 +67,7 @@ If you haven't already, install [Python 3](https://www.python.org/downloads/).
 
 For each Lua file, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key.
 ```
-patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" {patched-file}.bin
+patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
 The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step.
