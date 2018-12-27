@@ -74,7 +74,7 @@ patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" -o {
 
 The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. 
 
-__Experimental__: I made an executable version of the Python script available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip). With that the command line is:
+__Experimental__: I made an executable version of the Python script available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip), which does not require to install Python. The command line is:
 ```
 patchluastr.exe original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
