@@ -66,11 +66,18 @@ Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua 
 If you haven't already, install [Python 3](https://www.python.org/downloads/).
 
 For each Lua file, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key.
+
+Open a command prompt, navigate to the folder where you stored patchluastr.py and enter:
 ```
 patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
-The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step.
+The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. 
+
+__Experimental__: I made an executable version of the Python script available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip). With that the command line is:
+```
+patchluastr.exe original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
+```
 
 ### 6. Update Lightroom Map module with patched Lua files
 
