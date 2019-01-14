@@ -60,7 +60,7 @@ Locate the application files of Lightroom, and look for a file called `Location.
 
 The location and the file name may vary with the operating system and version of Lightroom.
 - For Lightroom 6.14 64-bit on Windows 10, the Map module is the file `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
-- For Lightroom 6.14 on Mac, the Map module is the folder `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule` 
+- For Lightroom 6.14 on Mac, locate `/Applications/Adobe Lightroom/Adobe Lightroom.app`, right-click and select *Show Package Content*. The Map module is `/Contents/PlugIns/Location.agmodule`. 
 
 ### 4. Extract Lua files for patching
 
@@ -72,8 +72,9 @@ On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extr
 
 ![Screenshot of Resource Hacker with save menu](images/ResourceHackerSave.PNG)
 
-On Mac, the Lua files are directly accessible inside the `Location.agmodule` folder:
-- Open the folder `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`
+On Mac, the Lua files are directly accessible inside `Location.agmodule`:
+- Right-click `Location.agmodel` and select *Show Package Content*
+- Then navigate to `/Contents/Resources/`
 - Copy the files `LocationMapView.lua` and `AgReverseGeocodeService.lua` to the desired location for patching
 
 ### 5. Patch Lua files with your Google Maps API key
