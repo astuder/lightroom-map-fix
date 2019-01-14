@@ -25,7 +25,16 @@ Failing to protect your Google Maps API key may lead to unexpected charges to yo
 
 ## Step-by-step Procedure
 
-This procedure was developed and tested with Lightroom 6.14 on Windows 10. Other operating systems and versions of Lightroom might differ. Please let us know if you had success (or not) with other version of Lightroom. You can do so by opening an [issue](https://github.com/astuder/lightroom-map-fix/issues). We also welcome any contributions that refine this process.
+This procedure was developed and tested with Lightroom 6.14 on Windows 10.
+
+Users reported that this also works with:
+- Lightroom 6.14 Windows 8.1 
+- Lightroom 6.14 Windows 7 Enterprise 64bit
+- Lightroom 6.14 Mac
+
+A big Thank You! to everyone that contributed with their feedback!
+
+Please let us know if you had success (or not) with other version of Lightroom. You can do so by opening an [issue](https://github.com/astuder/lightroom-map-fix/issues). We also welcome any input on refining this process.
 
 ### 1. Create your personal Google Maps API key
 
@@ -49,11 +58,13 @@ If Lightroom is still running, close it now.
 
 Locate the application files of Lightroom, and look for a file called `Location.lrmodule`. This is the Lightroom Map module. Make a backup copy of this file and keep it in a safe place.
 
-The location and the file name may vary with the operating system and version of Lightroom. For Lightroom 6 64-bit on Windows 10, the Map module can be found at `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
+The location and the file name may vary with the operating system and version of Lightroom.
+- For Lightroom 6.14 64-bit on Windows 10, the Map module is the file `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
+- For Lightroom 6.14 on Mac, the Map module is the folder `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule` 
 
 ### 4. Extract Lua files for patching
 
-Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
+On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
 - Open `Location.lrmodule` with Resource Hacker
 - Expand the section `LUA`
 - On `LOCATIONMAPVIEW.LUA`, right-click and select *save bin resource*
@@ -61,36 +72,46 @@ Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua 
 
 ![Screenshot of Resource Hacker with save menu](images/ResourceHackerSave.PNG)
 
+On Mac, the Lua files are directly accessible inside the `Location.agmodule` folder:
+- Open the folder `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`
+- Copy the files `LocationMapView.lua` and `AgReverseGeocodeService.lua` to the desired location for patching
+
 ### 5. Patch Lua files with your Google Maps API key
 
 If you haven't already, install [Python 3](https://www.python.org/downloads/).
 
 For each Lua file, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key.
 
-Open a command prompt, navigate to the folder where you stored patchluastr.py and enter:
+Open a command prompt, navigate to the folder where you stored patchluastr.py.
+
+On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. The run `patchluastr.py` like:
 ```
-patchluastr.py original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
+patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
-The name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. 
-
-__Experimental__: I made an executable version of the Python script available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip), which does not require to install Python. The command line is:
+On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` like:
 ```
-patchluastr.exe original-file "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
+patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.lua
+```
+
+__Experimental__: For Windows users that don't want to install Python, I made an executable version of `patchluastr` available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip), which does not require to install Python. The command line is:
+```
+patchluastr.exe {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
 ### 6. Update Lightroom Map module with patched Lua files
 
-Use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
+On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
 - Open `Location.lrmodule` with Resource Hacker
 - Expand the section `LUA`
 - On `LOCATIONMAPVIEW.LUA`, right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*
 - On `AGREVERSEGEOCODESERVICE.LUA` right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*.
 - Save `Location.lrmodule`. Depending on permissions, you may have to use *Save as* and then copy the modified file back into `C:\Program Files\Adobe\Lightroom\`
+- The patched version of Location.lrmodule may be significantly smaller than the original. Don't worry :-)
 
 ![Screenshot of Resource Hacker with replace menu](images/ResourceHackerReplace.PNG)
 
-The patched version of Location.lrmodule may be significantly smaller than the original. Don't worry :-)
+On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`.
 
 ### 7. Enjoy!
 
@@ -145,6 +166,6 @@ Costs and terms of service may differ by country. Please carefully review detail
 
 200 USD is enough for over 28000 map loads or 40000 calls to the Geo Coding API, which should be enough for casual use of the Lightroom Map module. To avoid surprises, you can set [budgets](https://cloud.google.com/billing/docs/how-to/budgets) or [quotas](https://cloud.google.com/apis/docs/capping-api-usage). Budgets will send an email alert when a configured amount is exceeded, whereas quotas will turn off the API.
 
-We recommend to configure a budget of 1 USD and a first alert at 10%. With this configuration, Google will send you an email if you spend more than 10 cents of your own money.
+We recommend to configure a budget of 200 USD (or whatever the monthly credit is in your country) and alerts at 10%, 50% and 90%. With this configuration, Google will send you emails when you get close to using your free credits.
 
 ![Screenshot of budget configuration](images/Budget.PNG)
