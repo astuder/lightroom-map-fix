@@ -84,7 +84,7 @@ For each Lua file, use the Python script [patchluastr.py](patchluastr.py) to rep
 
 Open a command prompt, navigate to the folder where you stored patchluastr.py.
 
-On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. The run `patchluastr.py` like:
+On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` like:
 ```
 patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
@@ -166,6 +166,6 @@ Costs and terms of service may differ by country. Please carefully review detail
 
 200 USD is enough for over 28000 map loads or 40000 calls to the Geo Coding API, which should be enough for casual use of the Lightroom Map module. To avoid surprises, you can set [budgets](https://cloud.google.com/billing/docs/how-to/budgets) or [quotas](https://cloud.google.com/apis/docs/capping-api-usage). Budgets will send an email alert when a configured amount is exceeded, whereas quotas will turn off the API.
 
-We recommend to configure a budget of 200 USD (or whatever the monthly credit is in your country) and alerts at 10%, 50% and 90%. With this configuration, Google will send you emails when you get close to using your free credits.
+We recommend to configure a budget of 1 USD and a first alert at 10%. With this configuration, Google will send you an email if you spend more than 10 cents of your own money.
 
 ![Screenshot of budget configuration](images/Budget.PNG)
