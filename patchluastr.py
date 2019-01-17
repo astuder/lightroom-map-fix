@@ -77,9 +77,9 @@ if __name__ == "__main__":
     lua_sys_par = args.input.read(6)
     lua_endian = lua_sys_par[0]
     lua_int_size = lua_sys_par[1]
-    lua_sizet_size = lua_sys_par[2]
-    lua_instr_size = lua_sys_par[3]
-    lua_num_size = lua_sys_par[3]
+    lua_instr_size = lua_sys_par[2]
+    lua_sizet_size = lua_sys_par[3]
+    lua_num_size = lua_sys_par[4]
     print("Lua settings: endian %d, int %d, size_t %d, instruction %d, number %d" %
         (lua_endian, lua_int_size, lua_sizet_size, lua_instr_size, lua_num_size))
     if lua_endian != 1:
