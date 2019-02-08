@@ -95,6 +95,11 @@ On Mac, the name of the patched Lua file must be identical with the original fil
 patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.lua
 ```
 
+If running the patchluastr.py fails with an error like for example `TypeError: unsupported operand type(s)`, make sure that you have Python 3 installed. If you have multiple versions of Python installed, you can explicitly run the script with Python 3 by prefixing the command with `python3`:
+```
+python3 patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.lua
+```
+
 __Experimental__: For Windows users that don't want to install Python, I made an executable version of `patchluastr` available [here](https://github.com/astuder/lightroom-map-fix/blob/master/patchluastr-win10.zip), which does not require to install Python. The command line is:
 ```
 patchluastr.exe {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
