@@ -32,6 +32,8 @@ Users reported that this also works with:
 - Lightroom 6.14 Windows 7 Enterprise 64bit
 - Lightroom 6.14 Mac
 
+Currently the patch DOES NOT work with Lightroom 5 (issue #8) or Lightroom 7 (issue #10).
+
 A big Thank You! to everyone that contributed with their feedback!
 
 Please let us know if you had success (or not) with other version of Lightroom. You can do so by opening an [issue](https://github.com/astuder/lightroom-map-fix/issues). We also welcome any input on refining this process.
