@@ -183,17 +183,17 @@ Access to this API is implemented in the Lua resource AGREVERSEGEOCODESERVICE.LU
 
 ### Reverse Geocoding
 
-For reverse geocoding (adding the location name to image metadata based on known coordinates) Lightroom accesses the Google API with the query parameter `signature` which seems to be calculated based on Adobe's (expired) API key and your Lightrooms license key. The offending API call looks like:
+For reverse geocoding (adding the location name to image metadata based on known coordinates) Lightroom accesses the Google API with the query parameter `signature` which seems to be calculated based on Adobe's (expired) API key and your Lightroom license key. The offending API call looks like:
 
 ```
-http://maps.google.com/maps/api/geocode/json?key=[your-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&signature=[string-of-characters]
+http://maps.google.com/maps/api/geocode/json?key=[api-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&signature=[string-of-characters]
 ```
 
 Fortunately for us, while the Google API denies access with an expired signature, the API does work if `signature=[string-of-characters]` is removed from the URL, or when `signature` is replaced with an unknown parameter name. Unfortunately, the string `signature` does not exist in any Lua file.
 
 It turns out the functionality is hidden by breaking up strings. The signature is calculated in `LocationDebugPanel.lua` and the string `nature` in that file is part of the parameter name `signature`. Replacing `nature` with `street` will change the API call to:
 ```
-http://maps.google.com/maps/api/geocode/json?key=[your-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&sigstreet=[string-of-characters]
+http://maps.google.com/maps/api/geocode/json?key=[api-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&sigstreet=[string-of-characters]
 ```
 which Google happily accepts.
 
