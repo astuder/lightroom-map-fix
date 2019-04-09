@@ -69,30 +69,45 @@ On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extr
 - Expand the section `LUA`
 - On `LOCATIONMAPVIEW.LUA`, right-click and select *save bin resource*
 - On `AGREVERSEGEOCODESERVICE.LUA`, right-click and select *save bin resource*
+- On `LOCATIONDEBUGPANEL.LUA`, right-click and select *save bin resource*
 
 ![Screenshot of Resource Hacker with save menu](images/ResourceHackerSave.PNG)
 
 On Mac, the Lua files are directly accessible inside `Location.agmodule`:
 - Right-click `Location.agmodel` and select *Show Package Content*
 - Then navigate to `/Contents/Resources/`
-- Copy the files `LocationMapView.lua` and `AgReverseGeocodeService.lua` to the desired location for patching
+- Copy the files `LocationMapView.lua`, `AgReverseGeocodeService.lua` and `LocationDebugPanel` to the desired location for patching
 
-### 5. Patch Lua files with your Google Maps API key
+### 5. Patch Lua files
 
 If you haven't already, install [Python 3](https://www.python.org/downloads/).
 
-For each Lua file, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key.
+The Python script [patchluastr.py](patchluastr.py) supplied with this project enables you to replace certain strings in Lua files.
 
-Open a command prompt, navigate to the folder where you stored patchluastr.py.
+For LocationMapView and AgReverseGeocodeService, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key:
 
-On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` like:
+- Open a command prompt, navigate to the folder where you stored patchluastr.py.
+- On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` like:
 ```
-patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
+patchluastr.py LOCATIONMAPVIEW.LUA "client=gme-adobesystems" "key={your-api-key}" -o LOCATIONMAPVIEW.bin
+patchluastr.py AGREVERSEGEOCODESERVICE.LUA "client=gme-adobesystems" "key={your-api-key}" -o AGREVERSEGEOCODESERVICE.bin
 ```
 
-On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` like:
+- On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` like:
 ```
-patchluastr.py {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.lua
+patchluastr.py LocationMapView.lua "client=gme-adobesystems" "key={your-api-key}" -o LocationMapView-patched.lua
+patchluastr.py AgReverseGeocodeService.lua "client=gme-adobesystems" "key={your-api-key}" -o AgReverseGeocodeService-patched.lua
+```
+
+With the file LocationDebugPanel, use the Python script [patchluastr.py](patchluastr.py) to disable the signature check:
+- Open a command prompt, navigate to the folder where you stored patchluastr.py.
+- On Windows run:
+```
+patchluastr.py LOCATIONDEBUGPANEL.LUA "nature" "street" -o LOCATIONDEBUGPANEL.bin
+```
+- On Mac run:
+```
+patchluastr.py LocationDebugPanel.lua "client=gme-adobesystems" "key={your-api-key}" -o LocationDebugPanel-patched.lua
 ```
 
 If running the patchluastr.py fails with an error like for example `TypeError: unsupported operand type(s)`, make sure that you have Python 3 installed. If you have multiple versions of Python installed, you can explicitly run the script with Python 3 by prefixing the command with `python3`:
@@ -112,12 +127,13 @@ On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to repl
 - Expand the section `LUA`
 - On `LOCATIONMAPVIEW.LUA`, right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*
 - On `AGREVERSEGEOCODESERVICE.LUA` right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*.
+- On `LOCATIONDEBUGPANEL.LUA` right-click and select *Replace Resource*, then click *Select File* and navigate to the patched version of this resource. Then click *Replace*
 - Save `Location.lrmodule`. Depending on permissions, you may have to use *Save as* and then copy the modified file back into `C:\Program Files\Adobe\Lightroom\`
 - The patched version of Location.lrmodule may be significantly smaller than the original. Don't worry :-)
 
 ![Screenshot of Resource Hacker with replace menu](images/ResourceHackerReplace.PNG)
 
-On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`.
+On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`, overwriting the original files.
 
 ### 7. Enjoy!
 
@@ -130,6 +146,7 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 - [Why the Map module stopped working](#why-the-map-module-stopped-working)
 - [Google Maps JavaScript API](#google-maps-javascript-api)
 - [Google Geocoding API](#google-geocoding-api)
+- [Reverse Geocoding](#reverse-geocoding)
 - [Google billing](#google-billing)
 
 ### Why the Map module stopped working
@@ -163,6 +180,22 @@ The Lightroom Map module calls the Geocoding API to display the place name of th
 We observed multiple calls to the Geocoding API when entering the Map module. We also don't know, what other operations will create calls to this API. We recommend to keep a close eye on the usage reports available on the Google Cloud Platform. If in doubt or too costly, disable access to the Geocoding API by removing the service from the API restrictions under [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials/key).
 
 Access to this API is implemented in the Lua resource AGREVERSEGEOCODESERVICE.LUA.
+
+### Reverse Geocoding
+
+For reverse geocoding (adding the location name to image metadata based on known coordinates) Lightroom accesses the Google API with the query parameter `signature` which seems to be calculated based on Adobe's (expired) API key and your Lightrooms license key. The offending API call looks like:
+
+```
+http://maps.google.com/maps/api/geocode/json?key=[your-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&signature=[string-of-characters]
+```
+
+Fortunately for us, while the Google API denies access with an expired signature, the API does work if `signature=[string-of-characters]` is removed from the URL, or when `signature` is replaced with an unknown parameter name. Unfortunately, the string `signature` does not exist in any Lua file.
+
+It turns out the functionality is hidden by breaking up strings. The signature is calculated in `LocationDebugPanel.lua` and the string `nature` in that file is part of the parameter name `signature`. Replacing `nature` with `street` will change the API call to:
+```
+http://maps.google.com/maps/api/geocode/json?key=[your-key]&language=EN&channel=lightroom-6.14&latlng=[coordinates-of-my-photo]&sigstreet=[string-of-characters]
+```
+which Google happily accepts.
 
 ### Google billing
 
