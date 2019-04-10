@@ -87,13 +87,13 @@ The Python script [patchluastr.py](patchluastr.py) supplied with this project en
 For LocationMapView and AgReverseGeocodeService, use the Python script [patchluastr.py](patchluastr.py) to replace Adobe's key with your personal Google Maps API key:
 
 - Open a command prompt, navigate to the folder where you stored patchluastr.py.
-- On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key:
+- On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key (without curly brackets):
 ```
 patchluastr.py LOCATIONMAPVIEW.LUA "client=gme-adobesystems" "key={your-api-key}" -o LOCATIONMAPVIEW.bin
 patchluastr.py AGREVERSEGEOCODESERVICE.LUA "client=gme-adobesystems" "key={your-api-key}" -o AGREVERSEGEOCODESERVICE.bin
 ```
 
-- On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key:
+- On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key (without curly brackets):
 ```
 patchluastr.py LocationMapView.lua.bak "client=gme-adobesystems" "key={your-api-key}" -o LocationMapView.lua
 patchluastr.py AgReverseGeocodeService.lua.bak "client=gme-adobesystems" "key={your-api-key}" -o AgReverseGeocodeService.lua
