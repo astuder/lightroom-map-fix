@@ -107,7 +107,7 @@ patchluastr.py LOCATIONDEBUGPANEL.LUA "nature" "street" -o LOCATIONDEBUGPANEL.bi
 ```
 - On Mac run:
 ```
-patchluastr.py LocationDebugPanel.lua "client=gme-adobesystems" "key={your-api-key}" -o LocationDebugPanel-patched.lua
+patchluastr.py LocationDebugPanel.lua "nature" "street" -o LocationDebugPanel-patched.lua
 ```
 
 If running the patchluastr.py fails with an error like for example `TypeError: unsupported operand type(s)`, make sure that you have Python 3 installed. If you have multiple versions of Python installed, you can explicitly run the script with Python 3 by prefixing the command with `python3`:
