@@ -76,7 +76,7 @@ On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extr
 On Mac, the Lua files are directly accessible inside `Location.agmodule`:
 - Right-click `Location.agmodel` and select *Show Package Content*
 - Then navigate to `/Contents/Resources/`
-- Copy the files `LocationMapView.lua`, `AgReverseGeocodeService.lua` and `LocationDebugPanel` to the desired location for patching
+- Copy the files `LocationMapView.lua`, `AgReverseGeocodeService.lua` and `LocationDebugPanel.lua` to the desired location for patching
 
 ### 5. Patch Lua files
 
