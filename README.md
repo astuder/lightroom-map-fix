@@ -40,7 +40,7 @@ A big Thank You! to everyone that contributed with their feedback!
 
 You need to create your personal Google Maps API key.
 
-The first step in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
+The first section in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
 
 ### 2. Restrict the Google Maps API key
 
@@ -139,7 +139,7 @@ On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adob
 
 The Map module in your installation of Lightroom now works again.
 
-If you didn't enable Geo Coding API, you will briefly see error messages. However, the basic map and geo tagging functionality will still work.
+If you didn't enable Geo Coding API, you will briefly see error messages. However, the basic map and geo tagging functionality will still work.(Note: Some users report that the map module didn't work for them unless the Geo Coding API is activated)
 
 ## Technical Background
 
@@ -151,7 +151,7 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 
 ### Why the Map module stopped working
 
-Earlier this year, Google revamped the pricing model for embedding Google Maps into 3rd party applications, changing from free access or flat fees to [transaction based pricing](https://cloud.google.com/maps-platform/pricing/sheet/). The number of requests to the Google Maps APIs are counted, and after a threshold, a small fee is charged for every request.
+In early 2018, Google revamped the pricing model for embedding Google Maps into 3rd party applications, changing from free access or flat fees to [transaction based pricing](https://cloud.google.com/maps-platform/pricing/sheet/). The number of requests to the Google Maps APIs are counted, and after a threshold, a small fee is charged for every request.
 
 Google's new pricing is not compatible with products that are licensed perpetually. With classic Lightroom, Adobe only got money once, but would have to pay Google each time you use the Map module. For Adobe, this is not a sustainable business model.
 
