@@ -62,6 +62,8 @@ The location and the file name may vary with the operating system and version of
 - For Lightroom 6.14 64-bit on Windows 10, the Map module is the file `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
 - For Lightroom 6.14 on Mac, locate `/Applications/Adobe Lightroom/Adobe Lightroom.app`, right-click and select *Show Package Content*. The Map module is `/Contents/PlugIns/Location.agmodule`. 
 
+> IMPORTANT NOTE: If you leave the backup file in the original folder, the file extension must be changed (e.g. from Location.lrmodule to Location.lrmodule_bak). Otherwise it may still get picked up by Lightroom instead of the patched file.
+
 ### 4. Extract Lua files for patching
 
 On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
