@@ -43,17 +43,21 @@ You need to create your personal Google Maps API key.
 
 The first section in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
 
-### 2. Restrict the Google Maps API key
+### 2. Enable required Google Maps services
+
+Go to [APIs & Services > Library](https://console.cloud.google.com/apis/library) and filter by [Category > Maps](https://console.cloud.google.com/apis/library?filter=category:maps).
+
+Select the following APIs and click Enable:
+* [Maps JavaScript API](https://console.cloud.google.com/apis/library/maps-backend.googleapis.com?filter=category:maps)
+* [Geocoding API](https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com?filter=category:maps).
+
+### 3. Restrict the Google Maps API key
 
 As Lightroom only calls two APIs, restrict the Google Maps API key to the required services to limit the risk of abuse.
-- Google Maps JavaScript API
-- Geocoding API (optional)
-
-To add Geocoding, go to [APIs & Services > Library](https://console.cloud.google.com/apis/library), search for [Geocoding](https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com?q=geocoding) and click Enable.
 
 ![Screenshot of Google Maps API key restrictions](images/KeyRestrictions2.PNG)
 
-### 3. Backup the Lightroom Map module
+### 4. Backup the Lightroom Map module
 
 If Lightroom is still running, close it now.
 
@@ -65,7 +69,7 @@ The location and the file name may vary with the operating system and version of
 
 > IMPORTANT NOTE: If you leave the backup copy in the original folder, the file extension must be changed (e.g. from Location.lrmodule to Location.lrmodule_bak). Otherwise it may still get picked up by Lightroom instead of the patched file.
 
-### 4. Extract Lua files for patching
+### 5. Extract Lua files for patching
 
 On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to extract the Lua resources we need to patch:
 - Open `Location.lrmodule` with Resource Hacker
@@ -81,7 +85,7 @@ On Mac, the Lua files are directly accessible inside `Location.agmodule`:
 - Then navigate to `/Contents/Resources/`
 - Copy the files `LocationMapView.lua`, `AgReverseGeocodeService.lua` and `LocationDebugPanel.lua` to the desired location for patching
 
-### 5. Patch Lua files
+### 6. Patch Lua files
 
 If you haven't already, install [Python 3](https://www.python.org/downloads/).
 
@@ -123,7 +127,7 @@ __Experimental__: For Windows users that don't want to install Python, I made an
 patchluastr.exe {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
-### 6. Update Lightroom Map module with patched Lua files
+### 7. Update Lightroom Map module with patched Lua files
 
 On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
 - Open `Location.lrmodule` with Resource Hacker
@@ -138,7 +142,7 @@ On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to repl
 
 On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adobe Lightroom.app/Contents/PlugIns/Location.agmodule/Contents/Resources/`, overwriting the original files.
 
-### 7. Enjoy!
+### 8. Enjoy!
 
 The Map module in your installation of Lightroom now works again.
 
