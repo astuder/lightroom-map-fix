@@ -164,7 +164,7 @@ Now use `LOCATIONMAPVIEW-osm.bin` with Resource Hacker instead of `LOCATIONMAPVI
 
 ![Lightroom 6 with OpenStreetMap map style](images/OpenStreetMapStyle.PNG)
 
-Credit for hack: [@pbb](https://github.com/pbb72)
+Credit for hack: [@pbb72](https://github.com/pbb72)
 
 ### JavaScript Console
 
@@ -186,7 +186,7 @@ Now enjoy actually readable error messages!
 
 ![JavaScript error messages displayed below map window in Lightroom 6](images/JavaScriptConsole.PNG)
 
-Credit for hack: [@pbb](https://github.com/pbb72)
+Credit for hack: [@pbb72](https://github.com/pbb72)
 
 ## Technical Background
 
