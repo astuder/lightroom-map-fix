@@ -43,7 +43,7 @@ You need to create your personal Google Maps API key.
 
 The first section in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
 
-### 2. Enable required Google Maps services
+### 2. Enable required Google Maps API services
 
 Go to [APIs & Services > Library](https://console.cloud.google.com/apis/library) and filter by [Category > Maps](https://console.cloud.google.com/apis/library?filter=category:maps).
 
