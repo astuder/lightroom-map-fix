@@ -153,7 +153,7 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 
 ### OpenStreetMap Map Style
 
-This patch replaces the "Light" map style with [OpenStreeMap](https://www.openstreetmap.org). This hack builds on the GoogleMaps API and therefore still requires the Google Maps API key.
+This patch replaces the "Light" map style with [OpenStreeMap](https://www.openstreetmap.org). This hack builds on the Google Maps API and therefore still requires the Google Maps API key.
 
 After patching the API key, execute:
 ```
@@ -164,12 +164,13 @@ Now use `LOCATIONMAPVIEW-osm.bin` with Resource Hacker instead of `LOCATIONMAPVI
 
 ![Lightroom 6 with OpenStreetMap map style](images/OpenStreetMapStyle.PNG)
 
-Credit for hack: @pbb72
+Credit for hack: [@pbb](https://github.com/pbb72)
 
 ### JavaScript Console
 
 This patch displays JavaScript error and debug messages in a window below the map, which will be very helpful when developing more hacks. You probably don't want this enabled permanently, so make a backup of the Locations module before applying this hack.
 
+Run these patch commands, one after the other:
 ```
 patchluastr.py LOCATIONMAPVIEW.bin "width:100%; height:100%" "width:100%; height:50%" -o LOCATIONMAPVIEW-50p.bin
 patchluastr.py LOCATIONMAPVIEW-50p.bin "background: #3f3f3f;" "background: #3f3f3f; color: white;" -o LOCATIONMAPVIEW-color.bin
@@ -185,7 +186,7 @@ Now enjoy actually readable error messages!
 
 ![JavaScript error messages displayed below map window in Lightroom 6](images/JavaScriptConsole.PNG)
 
-Credit for hack: @pbb72
+Credit for hack: [@pbb](https://github.com/pbb72)
 
 ## Technical Background
 
