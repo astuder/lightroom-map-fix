@@ -9,6 +9,7 @@ To achieve this, we will modify Lightroom to use our own Google Maps API key ins
 ### Table of contents
 - [Before you start READ THIS FIRST](#before-you-start-read-this-first)
 - [Step-by-step Procedure](#step-by-step-procedure)
+- [More Hacks](#more-hacks)
 - [Technical Background](#technical-background)
 
 ## Before you start READ THIS FIRST
@@ -142,6 +143,49 @@ On Mac, copy the patched Lua files back into `/Applications/Adobe Lightroom/Adob
 The Map module in your installation of Lightroom now works again.
 
 If you didn't enable Geo Coding API, you will briefly see error messages. However, the basic map and geo tagging functionality will still work.(Note: Some users report that the map module didn't work for them unless the Geo Coding API is activated)
+
+## More Hacks
+
+**Make double-sure you have a backup of Locations.lrmodule before playing with these!**
+
+- [OpenStreetMap Map Style](#openstreetmap-map-style)
+- [JavaScript Console](#javascript-console)
+
+### OpenStreetMap Map Style
+
+This patch replaces the "Light" map style with [OpenStreeMap](https://www.openstreetmap.org). This hack builds on the GoogleMaps API and therefore still requires the Google Maps API key.
+
+After patching the API key, execute:
+```
+patchluastr.py LOCATIONMAPVIEW.bin "StyledMapType( lightStyle, styledMapOptions )" "ImageMapType({ getTileUrl: function(coord, zoom) { var tilesPerGlobe = 1 << zoom; var x = coord.x % tilesPerGlobe; if (x < 0) { x = tilesPerGlobe+x; } return 'https://tile.openstreetmap.org/' + zoom + '/' + x + '/' + coord.y + '.png'; }, tileSize: new google.maps.Size(256, 256), name: 'OpenStreetMap', maxZoom: 19 })" -o LOCATIONMAPVIEW-osm.bin
+```
+
+Now use `LOCATIONMAPVIEW-osm.bin` with Resource Hacker instead of `LOCATIONMAPVIEW.bin`, and afterwards OpenStreetMap is available as the "Light" map style.
+
+![Lightroom 6 with OpenStreetMap map style](images/OpenStreetMapStyle.PNG)
+
+Credit for hack: @pbb72
+
+### JavaScript Console
+
+This patch displays JavaScript error and debug messages in a window below the map, which will be very helpful when developing more hacks. You probably don't want this enabled permanently, so make a backup of the Locations module before applying this hack.
+
+```
+patchluastr.py LOCATIONMAPVIEW.bin "width:100%; height:100%" "width:100%; height:50%" -o LOCATIONMAPVIEW-50p.bin
+patchluastr.py LOCATIONMAPVIEW-50p.bin "background: #3f3f3f;" "background: #3f3f3f; color: white;" -o LOCATIONMAPVIEW-color.bin
+patchluastr.py LOCATIONMAPVIEW-color.bin "</div>" "</div><ul id='myULContainer'></ul><script src='https://cdn.rawgit.com/Alorel/console-log-html/master/console-log-html.min.js'></script><script>ConsoleLogHTML.connect(document.getElementById('myULContainer'));</script>" -o LOCATIONMAPVIEW-con.bin
+```
+
+These steps do the following:
+1. Reduce the map window size.
+1. Make text output readable.
+1. Install a script to redirect console output to the window
+
+Now enjoy actually readable error messages!
+
+![JavaScript error messages displayed below map window in Lightroom 6](images/JavaScriptConsole.PNG)
+
+Credit for hack: @pbb72
 
 ## Technical Background
 
