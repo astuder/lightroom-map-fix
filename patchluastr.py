@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Adrian Studer
+# Copyright (c) 2018-2020 Adrian Studer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -49,8 +49,6 @@ if __name__ == "__main__":
                         help="string to use as replacement")
     parser.add_argument("-o", "--output", type=argparse.FileType("wb", 0),
                         help="output file")
-    parser.add_argument("-s", "--substr", action="store_true",
-                        help="also replace substrings")
     args = parser.parse_args()
 
     # prepare data for new file
