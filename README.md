@@ -161,7 +161,7 @@ This patch replaces the "Light" map style with [OpenStreeMap](https://www.openst
 
 After patching the API key, execute:
 ```
-patchluastr.py LOCATIONMAPVIEW.bin "StyledMapType( lightStyle, styledMapOptions )" "ImageMapType({ getTileUrl: function(coord, zoom) { var tilesPerGlobe = 1 << zoom; var x = coord.x % tilesPerGlobe; if (x < 0) { x = tilesPerGlobe+x; } return 'https://tile.openstreetmap.org/' + zoom + '/' + x + '/' + coord.y + '.png'; }, tileSize: new google.maps.Size(256, 256), name: 'OpenStreetMap', maxZoom: 19 })" -o LOCATIONMAPVIEW-osm.bin
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/osm.patch -o LOCATIONMAPVIEW-osm.bin
 ```
 
 Now use `LOCATIONMAPVIEW-osm.bin` with Resource Hacker instead of `LOCATIONMAPVIEW.bin`, and afterwards OpenStreetMap is available as the "Light" map style.
@@ -174,14 +174,12 @@ Credit for hack: [@pbb72](https://github.com/pbb72)
 
 This patch displays JavaScript error and debug messages in a window below the map, which will be very helpful when developing more hacks. You probably don't want this enabled permanently, so make a backup of the Locations module before applying this hack.
 
-Run these patch commands, one after the other:
+Run the hacks/jsconsole.patch script:
 ```
-patchluastr.py LOCATIONMAPVIEW.bin "width:100%; height:100%" "width:100%; height:50%" -o LOCATIONMAPVIEW-50p.bin
-patchluastr.py LOCATIONMAPVIEW-50p.bin "background: #3f3f3f;" "background: #3f3f3f; color: white;" -o LOCATIONMAPVIEW-color.bin
-patchluastr.py LOCATIONMAPVIEW-color.bin "</div>" "</div><ul id='myULContainer'></ul><script src='https://cdn.rawgit.com/Alorel/console-log-html/master/console-log-html.min.js'></script><script>ConsoleLogHTML.connect(document.getElementById('myULContainer'));</script>" -o LOCATIONMAPVIEW-con.bin
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/jsconsole.patch -o LOCATIONMAPVIEW-con.bin
 ```
 
-These steps do the following:
+The script does the following:
 1. Reduce the map window size.
 1. Make text output readable.
 1. Install a script to redirect console output to the window

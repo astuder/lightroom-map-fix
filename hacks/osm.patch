@@ -1,0 +1,13 @@
+# Replace Light theme with OpenStreetMap
+# patchluastr.py LOCATIONMAPVIEW.LUA -p osm.patch -o LOCATIONMAPVIEW-osm.bin
+< StyledMapType( lightStyle, styledMapOptions )
+> ImageMapType({
+>     getTileUrl: function(coord, zoom) {
+>         var tilesPerGlobe = 1 << zoom;
+>         var x = coord.x % tilesPerGlobe;
+>         if (x < 0) {
+>             x = tilesPerGlobe+x;
+>         }
+>         return 'https://tile.openstreetmap.org/' + zoom + '/' + x + '/' + coord.y + '.png';
+>     }, tileSize: new google.maps.Size(256, 256), name: 'OpenStreetMap', maxZoom: 19 })
+>

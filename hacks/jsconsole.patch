@@ -1,0 +1,13 @@
+# Display JavaScript console below map window
+# patchluastr.py LOCATIONMAPVIEW.LUA -p jsconsole.patch -o LOCATIONMAPVIEW-con.bin
+# 1. Reduce the map window size
+< width:100%; height:100%
+> width:100%; height:80%
+# 2. Make text output readable 
+< background: #3f3f3f;
+> background: #3f3f3f; color: white;
+# 3. Install a script to redirect console output to the window
+< </div>
+> </div><ul id='myULContainer'></ul>
+> <script src='https://cdn.rawgit.com/Alorel/console-log-html/master/console-log-html.min.js'></script>
+> <script>ConsoleLogHTML.connect(document.getElementById('myULContainer'));</script>
