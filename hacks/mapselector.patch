@@ -1,0 +1,26 @@
+# Enable and customize Google Maps map selector
+# patchluastr.py LOCATIONMAPVIEW.LUA -p mapselector.patch -o LOCATIONMAPVIEW-sel.bin
+
+# Enable map selector control
+< mapTypeControl: false
+> mapTypeControl: true
+# Set selector position to top left
+< google.maps.ControlPosition.BOTTOM
+> google.maps.ControlPosition.TOP_LEFT
+# Change control to a drop-down menu
+< mapTypeIds:
+> style: google.maps.MapTypeControlStyle.DROPDOWN_MENU, mapTypeIds:
+# Reduce size of control to be more appropriate for the task
+< #map_canvas
+> .gm-style-mtc div { width: 200px } #map_canvas
+
+# Add a few custom map types 
+< darkMapType );
+> darkMapType );
+# ArcGIS satellite
+> map.mapTypes.set('ArcgisSat',new google.maps.ImageMapType({getTileUrl: function(coord,zoom){ return 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + zoom + '/' + coord.y + '/' + coord.x;}, tileSize: new google.maps.Size(256,256), name: 'ArcGIS sat', maxZoom: 20 }));
+# OpenStreeMap
+> map.mapTypes.set('OpenStreetMap',new google.maps.ImageMapType({ getTileUrl: function(coord, zoom) { var tilesPerGlobe = 1 << zoom; var x = coord.x % tilesPerGlobe; if (x < 0) { x = tilesPerGlobe+x; } return 'https://tile.openstreetmap.org/' + zoom + '/' + x + '/' + coord.y + '.png'; }, tileSize: new google.maps.Size(256, 256), name: 'OpenStreetMap', maxZoom: 19 }));
+# and append the custom maps to the drop-down
+< TERRAIN,
+> TERRAIN, 'ArcgisSat', 'OpenStreetMap',

@@ -153,6 +153,9 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 **Make double-sure you have a backup of Locations.lrmodule before playing with these!**
 
 - [OpenStreetMap Map Style](#openstreetmap-map-style)
+- [Google Street View](#google-street-view)
+- [Google Maps Tilt View](#google-maps-tilt-view)
+- [Extended Map Selector](#extended-map-selector)
 - [JavaScript Console](#javascript-console)
 
 ### OpenStreetMap Map Style
@@ -169,6 +172,51 @@ Now use `LOCATIONMAPVIEW-osm.bin` with Resource Hacker instead of `LOCATIONMAPVI
 ![Lightroom 6 with OpenStreetMap map style](images/OpenStreetMapStyle.PNG)
 
 Credit for hack: [@pbb72](https://github.com/pbb72)
+
+### Google Street View
+
+This is quite radical; if we enable StreetView, then we can see our map pins in 3-D! It's not very precise, but it's just very cool.
+
+There is already code in place in the Lightroom file to enable StreetView, so apparently Adobe has been working on it, but maybe turned it off because it was not good enough.
+
+To enable this hidden feature, run:
+```
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/osm.patch -o LOCATIONMAPVIEW-osm.bin
+```
+
+![Google Street View in Lightroom 6](images/StreetView.jpg)
+
+Credit for hack and screenshot: [@pbb72](https://github.com/pbb72)
+
+### Google Maps Tilt View
+
+Some locations on earth offer aerial photos with a diagonal perspective (instead of a top-down view). Note: these photos are not very precise.
+
+To enable this control, run:
+```
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/tiltmap.patch -o LOCATIONMAPVIEW-tilt.bin
+```
+
+With this patch, new controls will appear on the bottom right if the data is available for the current location. You may have to zoom in for the control to appear.
+
+![Google Maps tilt view](images/TiltMap.jpg)
+
+Credit for hack: [@pbb72](https://github.com/pbb72)
+
+### Extended Map Selector
+
+We can't add more maps to Lightroom's map style selector (we think). But luckily Google Maps offers their own map style selector, which we just need to enable.
+
+Once enabled, we can add our own entries to the drop-down menu. See comments inside
+the patch file for more information.
+
+```
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/mapselector.patch -o LOCATIONMAPVIEW-sel.bin
+```
+
+![New drop-down menu with custom map styles](images/MapSelector.jpg)
+
+Credit for hack and screenshot: [@pbb72](https://github.com/pbb72)
 
 ### JavaScript Console
 
@@ -188,7 +236,7 @@ Now enjoy actually readable error messages!
 
 ![JavaScript error messages displayed below map window in Lightroom 6](images/JavaScriptConsole.PNG)
 
-Credit for hack: [@pbb72](https://github.com/pbb72)
+Credit for hack and screenshot: [@pbb72](https://github.com/pbb72)
 
 ## Technical Background
 

@@ -1,0 +1,9 @@
+# Enable Google Street View in maps
+# patchluastr.py LOCATIONMAPVIEW.LUA -p streetview.patch -o LOCATIONMAPVIEW-sv.bin
+
+# There's already code for Street View that we can enable. Dummy variables are 
+# required to dispose runtime valus controlled by Lua code.
+< var streetViewControlEnabled = 
+> var streetViewControlEnabled = true, dummy = 
+< var streetViewEnabled = 
+> var streetViewEnabled = true, dummy2 = 

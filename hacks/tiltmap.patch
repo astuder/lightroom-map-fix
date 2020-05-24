@@ -1,0 +1,4 @@
+# Enable Google Maps tilt map controls
+# patchluastr.py LOCATIONMAPVIEW.LUA -p tiltmap.patch -o LOCATIONMAPVIEW-tilt.bin
+< rotateControl: false
+> rotateControl: true
