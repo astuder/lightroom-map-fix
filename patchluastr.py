@@ -18,7 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import sys
+from sys import exit
+from sys import argv
 import argparse
 
 def decode_int(data, endian):
@@ -271,7 +272,7 @@ class PatchFile:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        epilog="If a patch file is used, all other arguments are ignored. Without patch file, all positional arguments are mandatory.")
+        epilog="Without patch file, all positional arguments are mandatory.")
     parser.add_argument("input", type=argparse.FileType("rb", 0), nargs="?",
                         help="input file")
     parser.add_argument("find", type=str, nargs="?",
@@ -285,7 +286,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # check if any arguments were passed
-    if not len(sys.argv) > 1:
+    if not len(argv) > 1:
         parser.print_usage()
         exit()
 
