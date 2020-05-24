@@ -47,7 +47,7 @@ class LuaFile():
 
     def load(self):
         # read and verify Lua signature: 4 bytes (0x1b, 0x4c, 0x75, 0x61) (ESC Lua)
-        print("Processing", self.file.name)
+        print("Reading", self.file.name)
         self.sig = self.file.read(4)
         if self.sig != b'\x1bLua':
             print("This is not a Lua file.")
@@ -138,11 +138,19 @@ class LuaFile():
         print("%d bytes written to %s" % (len(self.header)+len(self.body), file.name))
 
 class Section:
+    AUTO_SECTION_NAME = "!AUTO!"
+
     def __init__(self):
-        self.name = ""
+        self.name = self.AUTO_SECTION_NAME
         self.infile = ""
         self.outfile = ""
         self.patches = []
+
+    def is_auto_section(self):
+        if self.name != self.AUTO_SECTION_NAME:
+            return False
+        else:
+            return True
 
 class Patch:
     def __init__(self):
@@ -157,6 +165,7 @@ class PatchFile:
         currpatch = None
         for lnr, line in enumerate(file):
             line = line.lstrip()
+            lnr += 1    # count lines starting at 1, not 0
             if len(line) == 0:
                 # ignore empty lines
                 pass
@@ -165,31 +174,29 @@ class PatchFile:
                 pass
             elif line.startswith("[") and line.rstrip().endswith("]"):
                 # new section
-                currsection = Section()
-                currpatch = None
-                self.sections.append(currsection)
-                currsection.name = line.rstrip()[1:-1]            
-            elif line.startswith("< "):
-                # find string
-                if currsection is None:
-                    print("Error: No current section in line", lnr)
+                if not currsection is None and currsection.is_auto_section():
+                    print("Error: Can't mix simplified with sectioned patch file in line", lnr)
                     print(line.rstrip())
                     errors += 1
-                elif len(line[2:-1]) == 0:
+                # create section despite error to complete parsing file
+                currsection = self.new_section(line.rstrip()[1:-1])
+                currpatch = None
+            elif line.startswith("< "):
+                # find string
+                if len(line[2:-1]) == 0:
                     print("Error: Missing search string in line", lnr)
                     print(line.rstrip())
                     errors += 1
                 else:
+                    if currsection is None:
+                        # auto create section for simplified patches
+                        currsection = self.new_section()
                     currpatch = Patch()
                     currsection.patches.append(currpatch)
                     currpatch.find = line[2:-1]
             elif line.startswith(">"):
                 # replace string
-                if currsection is None:
-                    print("Error: No current section in line", lnr)
-                    print(line.rstrip())
-                    errors += 1
-                elif currpatch is None:
+                if currpatch is None:
                     print("Error: Missing search string before line", lnr)
                     print(line.rstrip())
                     errors += 1
@@ -206,7 +213,7 @@ class PatchFile:
                     name, value = line.split("=", 1)
                     name = name.rstrip()
                     value = value.lstrip().rstrip()
-                    if currsection is None:
+                    if currsection is None or currsection.is_auto_section():
                         print("Error: No current section in line", lnr)
                         print(line.rstrip())
                         errors += 1
@@ -238,16 +245,29 @@ class PatchFile:
         
         # validate in/out files
         for s in self.sections:
-            if s.infile == "":
-                print("Error: Missing input file for section", s.name)
-                print(line.rstrip())
-                errors += 1
-            elif s.outfile == "":
-                s.outfile = s.infile + ".patched"
+            if s.is_auto_section():
+                # no files in simplified patch
+                pass
+            else:
+                if len(s.patches) == 0:
+                    print("Error: No patch instructions in section", s.name)
+                    errors += 1
+                if s.infile == "":
+                    print("Error: Missing input file for section", s.name)
+                    errors += 1
+                elif s.outfile == "":
+                    s.outfile = s.infile + ".patched"
 
         if errors > 0:
             print("Aborting due to errors in patch script. No files were patched.")
             exit()
+
+    def new_section(self, name = None):
+        section = Section()
+        if not name is None:
+            section.name = name
+        self.sections.append(section)
+        return section
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -290,15 +310,32 @@ if __name__ == "__main__":
     else:
         # using patch file
         patch = PatchFile(args.patch)
-        for s in patch.sections:
-            print("Processing section [{}]".format(s.name))
-            with open(s.infile, "rb", 0) as infile:
-                with open(s.outfile, "wb", 0) as outfile:
-                    file = LuaFile(infile)
-                    file.load()
-                    for p in s.patches:
-                        file.replace(p.find, p.replace)
-                    file.write_to(outfile)
+        if len(patch.sections) == 0:
+            print("Error: Patch file is empty")
+            exit()
+        if patch.sections[0].is_auto_section():
+            # simplified patch file
+            if args.input is None:
+                print("Error: Missing input file for patching")
+                exit()
+            file = LuaFile(args.input)
+            file.load()
+            for p in patch.sections[0].patches:
+                file.replace(p.find, p.replace)
+            if args.output is None:
+                args.output = open(args.input.name + ".patched", "wb")
+            file.write_to(args.output)
+        else:
+            # sectioned patch file
+            for s in patch.sections:
+                print("Processing section [{}]".format(s.name))
+                with open(s.infile, "rb", 0) as infile:
+                    with open(s.outfile, "wb", 0) as outfile:
+                        file = LuaFile(infile)
+                        file.load()
+                        for p in s.patches:
+                            file.replace(p.find, p.replace)
+                        file.write_to(outfile)
 
         # clean up
         args.patch.close()
