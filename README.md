@@ -152,6 +152,8 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 
 **Make double-sure you have a backup of Locations.lrmodule before playing with these!**
 
+Note: Most of these hacks build on the Google Maps API and therefore still require fixing the Google Maps API key first.
+
 - [OpenStreetMap Map Style](#openstreetmap-map-style)
 - [Google Street View](#google-street-view)
 - [Google Maps Tilt View](#google-maps-tilt-view)
@@ -160,7 +162,7 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 
 ### OpenStreetMap Map Style
 
-This patch replaces the "Light" map style with [OpenStreeMap](https://www.openstreetmap.org). This hack builds on the Google Maps API and therefore still requires the Google Maps API key.
+This patch replaces the "Light" map style with [OpenStreeMap](https://www.openstreetmap.org). 
 
 After patching the API key, execute:
 ```
@@ -216,7 +218,7 @@ patchluastr.py LOCATIONMAPVIEW.bin -p hacks/mapselector.patch -o LOCATIONMAPVIEW
 
 ![New drop-down menu with custom map styles](images/MapSelector.jpg)
 
-Credit for hack and screenshot: [@pbb72](https://github.com/pbb72)
+Credit for hack: [@pbb72](https://github.com/pbb72)
 
 ### JavaScript Console
 
