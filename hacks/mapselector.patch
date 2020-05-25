@@ -13,6 +13,9 @@
 # Reduce size of control to be more appropriate for the task
 < #map_canvas
 > .gm-style-mtc div { width: 200px } #map_canvas
+# Fix name of drop-down entry for Light map style
+< lightStyle, styledMapOptions
+> lightStyle, { name: "Light" }
 
 # Add a few custom map types 
 < darkMapType );
