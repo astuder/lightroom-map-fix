@@ -152,6 +152,8 @@ If you didn't enable Geo Coding API, you will briefly see error messages. Howeve
 
 **Make double-sure you have a backup of Locations.lrmodule before playing with these!**
 
+The examples below use patch files, which can be found in the folder `hacks`. If you haven't yet, we recommend to clone or download the complete project from Github, for example by clicking the green button on the top right of this page.
+
 Note: Most of these hacks build on the Google Maps API and therefore still require fixing the Google Maps API key first.
 
 - [OpenStreetMap Map Style](#openstreetmap-map-style)
@@ -183,7 +185,7 @@ There is already code in place in the Lightroom file to enable StreetView, so ap
 
 To enable this hidden feature, run:
 ```
-patchluastr.py LOCATIONMAPVIEW.bin -p hacks/osm.patch -o LOCATIONMAPVIEW-osm.bin
+patchluastr.py LOCATIONMAPVIEW.bin -p hacks/streetview.patch -o LOCATIONMAPVIEW-sv.bin
 ```
 
 ![Google Street View in Lightroom 6](images/StreetView.jpg)
