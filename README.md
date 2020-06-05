@@ -51,11 +51,17 @@ Select the following APIs and click Enable:
 * [Maps JavaScript API](https://console.cloud.google.com/apis/library/maps-backend.googleapis.com?filter=category:maps)
 * [Geocoding API](https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com?filter=category:maps).
 
-### 3. Restrict the Google Maps API key
+### 3. Restrict the Google Maps API services
 
 As Lightroom only calls two APIs, restrict the Google Maps API key to the required services to limit the risk of abuse.
 
 ![Screenshot of Google Maps API key restrictions](images/KeyRestrictions2.PNG)
+
+The monthly free usage credits of Google Cloud should be enough for casual use of the Lightroom Map module. To avoid surprises, you should set [budgets](https://cloud.google.com/billing/docs/how-to/budgets) or [quotas](https://cloud.google.com/apis/docs/capping-api-usage). Budgets will send an email alert when a configured amount is exceeded, whereas quotas will turn off the API.
+
+We recommend to configure a budget of 1 USD and a first alert at 10%. With this configuration, Google will send you an email if you spend more than 10 cents of your own money.
+
+![Screenshot of budget configuration](images/Budget.PNG)
 
 ### 4. Backup the Lightroom Map module
 
