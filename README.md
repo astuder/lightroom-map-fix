@@ -133,6 +133,8 @@ __Experimental__: For Windows users that don't want to install Python, I made an
 patchluastr.exe {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
+__Note__: Some users report requiring additional patches. If you can't get the map working or the map stops working, check out [issue #12](https://github.com/astuder/lightroom-map-fix/issues/12#issuecomment-499776944) and [issue #19](https://github.com/astuder/lightroom-map-fix/issues/19#issuecomment-502568837). We didn't see this issue in the US, so it may depend on your country.
+
 ### 7. Update Lightroom Map module with patched Lua files
 
 On Windows, use [Resource Hacker](http://www.angusj.com/resourcehacker/) to replace the Lua resources with their patched version.
