@@ -276,6 +276,8 @@ The [Google Maps JavaScript API](https://developers.google.com/maps/documentatio
 
 As of December 2018, Google Maps JavaScript API [costs 0.007 USD per map load](https://developers.google.com/maps/documentation/javascript/usage-and-billing) (USD 7 / 1000). Once a map is loaded, user interactions with the map, such as panning, zooming or switching map layers, do not generate additional map loads.
 
+In addition, as of March 2023, the version of the API requested by Lightroom was deprecated, which caused Lightroom to load an incompatible version, breaking the maps functionality.
+
 The Lightroom Map module calls the Maps JavaScript API to show the map inside Lightroom. Access to this API is required for the Map module to work.
 
 Access to this API is implemented in the Lua resource LOCATIONMAPVIEW.LUA.
