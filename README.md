@@ -1,4 +1,4 @@
-# NOTE: As of Feburary 25 2023, this workaround no longer works :( See issue [#41](/../../issues/41)
+> NOTE: If you already patched Lightroom but maps stopped working, check issue [#41](https://github.com/astuder/lightroom-map-fix/issues/41#issuecomment-1481313640), or rerun the updated instructions below.
 
 # Fixing the Map Module in Lightroom Classic
 
@@ -104,13 +104,15 @@ For LocationMapView and AgReverseGeocodeService, use the Python script [patchlua
 - Open a command prompt, navigate to the folder where you stored patchluastr.py.
 - On Windows the name of the patched Lua file must end with `.bin`, otherwise Resource Hacker won't find it in the next step. Run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key (without curly brackets):
 ```
-patchluastr.py LOCATIONMAPVIEW.LUA "client=gme-adobesystems" "key={your-api-key}" -o LOCATIONMAPVIEW.bin
+patchluastr.py LOCATIONMAPVIEW.LUA "client=gme-adobesystems" "key={your-api-key}" -o LOCATIONMAPVIEW.tmp
+patchluastr.py LOCATIONMAPVIEW.tmp "3.12" "3.51" -o LOCATIONMAPVIEW.bin
 patchluastr.py AGREVERSEGEOCODESERVICE.LUA "client=gme-adobesystems" "key={your-api-key}" -o AGREVERSEGEOCODESERVICE.bin
 ```
 
 - On Mac, the name of the patched Lua file must be identical with the original file. The easiest is to first rename the orignal file, e.g. to `orignal-name.lua.bak`. Then run `patchluastr.py` as follows, replacing `{your-api-key}` with your Google API key (without curly brackets):
 ```
-patchluastr.py LocationMapView.lua.bak "client=gme-adobesystems" "key={your-api-key}" -o LocationMapView.lua
+patchluastr.py LocationMapView.lua.bak "client=gme-adobesystems" "key={your-api-key}" -o LocationMapView.lua.tmp
+patchluastr.py LocationMapView.lua.tmp "3.12" "3.51" -o LocationMapView.lua
 patchluastr.py AgReverseGeocodeService.lua.bak "client=gme-adobesystems" "key={your-api-key}" -o AgReverseGeocodeService.lua
 ```
 
@@ -135,7 +137,7 @@ __Experimental__: For Windows users that don't want to install Python, I made an
 patchluastr.exe {original-file} "client=gme-adobesystems" "key={your-api-key}" -o {patched-file}.bin
 ```
 
-__Note__: Some users report requiring additional patches. If you can't get the map working or the map stops working, check out [issue #12](https://github.com/astuder/lightroom-map-fix/issues/12#issuecomment-499776944) and [issue #19](https://github.com/astuder/lightroom-map-fix/issues/19#issuecomment-502568837). We didn't see this issue in the US, so it may depend on your country.
+> __Note__: Some users report requiring additional patches. If you can't get the map working or the map stops working, check out [issue #12](https://github.com/astuder/lightroom-map-fix/issues/12#issuecomment-499776944) and [issue #19](https://github.com/astuder/lightroom-map-fix/issues/19#issuecomment-502568837). We didn't see this issue in the US, so it may depend on your country.
 
 ### 7. Update Lightroom Map module with patched Lua files
 
