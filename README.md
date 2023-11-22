@@ -1,4 +1,5 @@
-> NOTE: If you already patched Lightroom but maps stopped working, check issue [#41](https://github.com/astuder/lightroom-map-fix/issues/41#issuecomment-1481313640), or rerun the updated instructions below.
+*** AS OF NOVEMBER 21 2023, THE MAP FIX AS DOCUMENTED BELOW DOESN'T WORK ANY LONGER
+*** See issue [#41](https://github.com/astuder/lightroom-map-fix/issues/41#issuecomment-1820876162) for current status.
 
 # Fixing the Map Module in Lightroom Classic
 
@@ -24,24 +25,23 @@ Keep your Google Maps API key secret
 
 Failing to protect your Google Maps API key may lead to unexpected charges to your Google Cloud account.
 
-**WARRANTY VOID! We are NOT responsible for breaking your Lightroom installation. We are NOT responsible for any charges on your Google Cloud account.**
+> **WARRANTY VOID! We are NOT responsible for breaking your Lightroom installation. We are NOT responsible for any charges on your Google Cloud account.**
 
 ## Step-by-step Procedure
 
 This procedure was developed and tested with Lightroom 6.14 on Windows 10.
 
 Users reported that this also works with:
-- Lightroom 6.14 Windows 8.1 
-- Lightroom 6.14 Windows 7 Enterprise 64bit
+- Lightroom 6.14 Windows 7, 8, 10 and 11 
 - Lightroom 6.14 Mac
 
 Currently the patch DOES NOT work with Lightroom 5.x ([issue #8](https://github.com/astuder/lightroom-map-fix/issues/8)) or Lightroom 7.x ([issue #10](https://github.com/astuder/lightroom-map-fix/issues/10)). Please let us know if you make any progress on these versions by commenting in the open issues.
 
-A big Thank You! to everyone that contributed with their feedback!
+A big Thank You! to everyone that contributed with their research and feedback!
 
 ### 1. Create your personal Google Maps API key
 
-You need to create your personal Google Maps API key.
+You need to create your personal Google Maps API key to replace Adobe's.
 
 The first section in [this guide](https://developers.google.com/maps/documentation/javascript/get-api-key) will take you through the process. If you don't already have an account on the Google Cloud, this will also include creating the account and entering the billing details.
 
@@ -72,7 +72,7 @@ If Lightroom is still running, close it now.
 Locate the application files of Lightroom, and look for a file called `Location.lrmodule`. This is the Lightroom Map module. Make a backup copy of this file and keep it in a safe place.
 
 The location and the file name may vary with the operating system and version of Lightroom.
-- For Lightroom 6.14 64-bit on Windows 10, the Map module is the file `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
+- For Lightroom 6.14 on Windows, the Map module is the file `C:\Program Files\Adobe\Lightroom\Location.lrmodule`
 - For Lightroom 6.14 on Mac, locate `/Applications/Adobe Lightroom/Adobe Lightroom.app`, right-click and select *Show Package Content*. The Map module is `/Contents/PlugIns/Location.agmodule`. 
 
 > IMPORTANT NOTE: If you leave the backup copy in the original folder, the file extension must be changed (e.g. from Location.lrmodule to Location.lrmodule_bak). Otherwise it may still get picked up by Lightroom instead of the patched file.
