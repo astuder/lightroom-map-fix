@@ -1,5 +1,5 @@
-*** AS OF NOVEMBER 21 2023, THE MAP FIX AS DOCUMENTED BELOW DOESN'T WORK ANY LONGER
-*** See issue [#41](https://github.com/astuder/lightroom-map-fix/issues/41#issuecomment-1820876162) for current status.
+> **AS OF NOVEMBER 21 2023, THE MAP FIX AS DOCUMENTED BELOW DOESN'T WORK ANY LONGER**
+> **See issue [#41](https://github.com/astuder/lightroom-map-fix/issues/41#issuecomment-1820876162) for current status.**
 
 # Fixing the Map Module in Lightroom Classic
 
