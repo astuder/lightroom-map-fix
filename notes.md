@@ -157,7 +157,7 @@ Replacing `google-map` with an arbitrary string returns the same result, indicat
 
 The LUA code responsible is in `AGSERVICESTATUS.LUA`, found in `LightroomSDK.dll`.
 
-Related: Service status was used to disable maps in Lightroom 5 (see [issue #8](https://github.com/astuder/lightroom-map-fix/issues/8):
+Related: Service status was used to disable maps in Lightroom 5 (see [issue #8](https://github.com/astuder/lightroom-map-fix/issues/8)):
 ```
 https://www.photoshop.com/api/service_status/lightroom/5.0:v1.0.0.0/win/en_us/google-map.json
 ```
