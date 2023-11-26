@@ -141,11 +141,154 @@ https://github.com/cztomczak/cefcapi/blob/master/examples/main_win.c
 
 Hash `770131916655f914b4659d82ef08993bf9cfdc22` referenced in code in `cef_toolkit.dll` points to API version `3.2704.1431`, available [here](https://github.com/sstream536/cef3-duilib-YDDemo/blob/master/Cef/include/cef_version.h).
 
-CEF has [remote debugging](https://github.com/cztomczak/cefpython/blob/master/docs/Knowledge-Base.md#remote-debugging-with-google-chrome-instance) functionality. Can be enabled by setting `debug_port` in `cef_settings_t` structure passed to `cef_initialize` function. Refer to API version linked above as structure changed over time. 
+CEF has [remote debugging](https://github.com/cztomczak/cefpython/blob/master/docs/Knowledge-Base.md#remote-debugging-with-google-chrome-instance) functionality. Can be enabled by setting `debug_port` in [`cef_settings_t`](https://github.com/sstream536/cef3-duilib-YDDemo/blob/master/Cef/include/internal/cef_types.h#L146C10-L146C10) structure passed to `cef_initialize` function.
 
-Plan: Use [Frida](https://frida.re) inspect and modify settings structure.
+We can use [Frida](https://frida.re) to inspect and modify the settings structure.
 
-Result: 
+Frida script:
+```python
+import frida
+import sys
+
+def on_message(message, data):
+    print("[%s] => %s" % (message, data))
+
+def main(target_process):
+    session = frida.attach(target_process)
+    script = session.create_script("""
+        // Find base address of current imported libcef.dll by target process
+        const baseAddr = Module.findBaseAddress('libcef.dll');
+        if (!baseAddr) {
+            console.log('Error: failed to locate DLL');
+        } else {
+            console.log('libcef.dll baseAddr: ' + baseAddr);
+
+            try {
+                // Find function we want to intercept
+                const cef_initialize = Module.getExportByName('libcef.dll', 'cef_initialize');
+
+                // Intercept calls to cef_initalize
+                Interceptor.attach(cef_initialize, {
+                    // When function is called, print out its parameters
+                    onEnter(args) {
+                        console.log('');
+                        console.log('[+] Called cef_initialize ' + cef_initialize);
+                        console.log('[+] *args ' + args[0]);
+                        console.log('[+] *settings ' + args[1]);
+                        console.log('[+] *application ' + args[2]);
+                        console.log('[+] *windows_sandbox_info ' + args[3]);
+                        dumpAddr('Settings', args[1], 0x150);
+                        console.log('browser_subprocess_path='  + args[1].add(0x10).readPointer().readUtf16String())
+                        console.log('log_file=' + args[1].add(0xb8).readPointer().readUtf16String());
+                        console.log('log_severity=' + args[1].add(0xd0).readU32());
+                        console.log('remote_debugging_port=' + args[1].add(0x124).readU32());
+                    },
+
+                    // When function is finished
+                    onLeave(retval) {
+                        console.log('[+] Returned from cef_initialize');
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function dumpAddr(info, addr, size) {
+            if (addr.isNull())
+                return;
+
+            console.log('Data dump ' + info + ':');
+            const buf = addr.readByteArray(size);
+
+            // If you want color magic, set ansi to true
+            console.log(hexdump(buf, { offset: 0, length: size, header: true, ansi: false }));
+        }
+        """)
+
+    script.on('message', on_message)
+    script.load()
+    print("[!] Ctrl+D on UNIX, Ctrl+Z on Windows/cmd.exe to detach from instrumented program.\n\n")
+    sys.stdin.read()
+    session.detach()
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: %s <process name or PID>" % __file__)
+        sys.exit(1)
+
+    try:
+        target_process = int(sys.argv[1])
+    except ValueError:
+        target_process = sys.argv[1]
+    main(target_process)
+```
+
+Launching Lightroom, starting above script, and then entering the Map module results in this output:
+```
+[+] Called cef_initialize 0x7ffb121af274
+[+] *args 0x14d758
+[+] *settings 0x14d7a8
+[+] *application 0x24109330
+[+] *windows_sandbox_info 0x0
+Data dump Settings:
+           0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0123456789ABCDEF
+00000000  50 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00  P...............
+00000010  30 d0 e5 3b 00 00 00 00 20 00 00 00 00 00 00 00  0..;.... .......
+00000020  60 2e e3 10 fb 7f 00 00 01 00 00 00 00 00 00 00  `...............
+00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000040  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000050  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000060  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000070  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000080  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000090  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000000a0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000000b0  00 00 00 00 00 00 00 00 a0 dc 29 05 00 00 00 00  ..........).....
+000000c0  31 00 00 00 00 00 00 00 60 2e e3 10 fb 7f 00 00  1.......`.......
+000000d0  03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000000e0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000000f0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000100  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000110  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000120  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000130  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000140  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+browser_subprocess_path=.\Adobe Lightroom CEF Helper.exe
+log_file=C:\Users\[user]\AppData\Local\Temp\\cef_debug.log
+log_severity=3
+remote_debugging_port=0
+[+] Returned from cef_initialize
+```
+
+Current debug log level `3` is `WARNING`. There is no log file in the temp directory.
+
+Changed log level to `VERBOSE` (`1`) by adding this line at the end of `onEnter()`:
+```
+args[1].add(0xd0).writeU32(1); // set log level VERBOSE
+```
+With this, `cef_debug.log` is created at the location specified in `log_file`. Contains detailed log of HTTP headers, no information related to Javascript.
+
+Enabled remote debugging on port 8080 by adding this line at the end of `onEnter()`:
+```
+args[1].add(0x124).writeU32(8080); // enable remote debugging on port 8080
+```
+There is now a a web page accessible at `http://127.0.0.1:8080`, displaying:
+```
+Inspectable WebContents
+MapView
+NavigatorMap
+```
+Unfortunately, clicking on either will bring up a blank page, and the following Javascript error:
+```
+Uncaught TypeError: document.registerElement is not a function
+    at registerCustomElement (inspector.js:3938:18)
+    at inspector.js:3950:492
+    at inspector.js:3965:113
+registerCustomElement @ inspector.js:3938
+(anonymous) @ inspector.js:3950
+(anonymous) @ inspector.js:3965
+```
 
 ## Phoning home
 
@@ -165,7 +308,7 @@ The response is:
 }
 ```
 
-Replacing `google-map` with an arbitrary string returns the same result, indicating that this the service status functionality is no longer active. Though still worth documenting in case of issues when the URL goes offline, or Adobe changes its mind.
+Replacing `google-map` with an arbitrary string returns the same result, indicating that the service status functionality is no longer active. Though still worth documenting in case of issues when the URL goes offline, or Adobe changes its mind.
 
 The LUA code responsible is in `AGSERVICESTATUS.LUA`, found in `LightroomSDK.dll`.
 
