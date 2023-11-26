@@ -273,13 +273,7 @@ Enabled remote debugging on port 8080 by adding this line at the end of `onEnter
 ```
 args[1].add(0x124).writeU32(8080); // enable remote debugging on port 8080
 ```
-There is now a a web page accessible at `http://127.0.0.1:8080`, displaying:
-```
-Inspectable WebContents
-MapView
-NavigatorMap
-```
-Unfortunately, clicking on either will bring up a blank page, and the following Javascript error:
+There is now a a web page accessible at `http://127.0.0.1:8080`, but the debug functionality is broken with the following Javascript error:
 ```
 Uncaught TypeError: document.registerElement is not a function
     at registerCustomElement (inspector.js:3938:18)
@@ -289,6 +283,7 @@ registerCustomElement @ inspector.js:3938
 (anonymous) @ inspector.js:3950
 (anonymous) @ inspector.js:3965
 ```
+However, using Chrome DevTools works. Steps as described [here](https://casparcgforum.org/t/html-remote-debugging-document-registerelement/2765/2). 
 
 ## Phoning home
 
