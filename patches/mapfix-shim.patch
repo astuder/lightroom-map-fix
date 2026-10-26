@@ -1,0 +1,32 @@
+# Lightroom 6.14 Map module: replace Google Maps with the mapfix shim (Leaflet, OpenStreetMap, Esri).
+# No Google API key needed. See README section "mapfix shim".
+#
+# Apply this patch file to each of these three Lua files:
+#   Windows: LOCATIONMAPVIEW.LUA, REVERSEGEOCODESERVICEFALLBACK.LUA, LOCATIONVIEWCONTROLLER.LUA
+#   Mac:     LocationMapView.lua, ReverseGeocodeServiceFallback.lua, LocationViewController.lua
+# e.g.  patchluastr.py LOCATIONMAPVIEW.LUA -p patches/mapfix-shim.patch -o LOCATIONMAPVIEW.bin
+#
+# Each file contains only some of the strings below, so "not found, nothing to patch"
+# messages are expected. Every file must report at least one "Updated ... strings".
+#
+# Works on the original Adobe module and on modules patched for a Google API key.
+
+# Map page and hidden reverse geocoding page: load the shim instead of Google's API.
+# (Map page: the URL used with enablePremiereLicense = false in config.lua.)
+< http://maps.google.com/maps/api/js?sensor=false
+> https://cdn.jsdelivr.net/gh/astuder/lightroom-map-fix@1/shim/mapfix-shim.js?sensor=false
+
+# Map page: the URL used with a premiere license (Lightroom's default without config.lua).
+< https://maps-api-ssl.google.com/maps/api/js?
+> https://cdn.jsdelivr.net/gh/astuder/lightroom-map-fix@1/shim/mapfix-shim.js?
+
+# Map page, premiere URL: rename the hard-coded Google API version parameter, so that
+# locationModule.api_version in config.lua is the only "v=" the shim sees.
+< &sensor=false&v=
+> &sensor=false&gv=
+
+# Online check: Lightroom shows "Map is offline" if this URL can't be loaded. It checks the
+# shim itself (same @1 release line as above), so Leaflet updates inside the shim never
+# require patching again.
+< https://maps.google.com/maps/api/js?sensor=false
+> https://cdn.jsdelivr.net/gh/astuder/lightroom-map-fix@1/shim/mapfix-shim.js
