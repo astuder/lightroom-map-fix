@@ -34,7 +34,7 @@
 
 	var document = window.document;
 
-	var SHIM_VERSION = "1.0.0";
+	var SHIM_VERSION = "1.0.1";
 	// Released versions of this file, for api_version = "v1.2.3" in Lightroom's config.lua
 	var RELEASE_URL = "https://cdn.jsdelivr.net/gh/astuder/lightroom-map-fix@{version}/shim/mapfix-shim.js";
 
@@ -1957,7 +1957,16 @@
 		SymbolPath: SymbolPath,
 		ElevationStatus: { OK: "OK", INVALID_REQUEST: "INVALID_REQUEST", OVER_QUERY_LIMIT: "OVER_QUERY_LIMIT",
 			REQUEST_DENIED: "REQUEST_DENIED", UNKNOWN_ERROR: "UNKNOWN_ERROR" },
-		MaxZoomStatus: { OK: "OK", ERROR: "ERROR" }
+		MaxZoomStatus: { OK: "OK", ERROR: "ERROR" },
+		// Control and style constants. Lightroom draws its own controls, so the shim ignores
+		// these options, but the constants must exist: other Lightroom 6 builds use some of
+		// them in their map options (e.g. MapTypeControlStyle.DROPDOWN_MENU).
+		MapTypeControlStyle: { DEFAULT: 0, HORIZONTAL_BAR: 1, DROPDOWN_MENU: 2, INSET: 3, INSET_LARGE: 4 },
+		ZoomControlStyle: { DEFAULT: 0, SMALL: 1, LARGE: 2 },
+		NavigationControlStyle: { DEFAULT: 0, SMALL: 1, ANDROID: 2, ZOOM_PAN: 3 },
+		ScaleControlStyle: { DEFAULT: 0 },
+		StrokePosition: { CENTER: 0, INSIDE: 1, OUTSIDE: 2 },
+		UnitSystem: { METRIC: 0, IMPERIAL: 1 }
 		// MaxZoomService and ElevationService are intentionally absent; Lightroom checks for them.
 	});
 
@@ -2038,7 +2047,22 @@
 		if (loadFailureReported) return;
 		loadFailureReported = true;
 		warn(message);
-		window.setTimeout(function () { throw new Error("mapfix-shim: " + message); }, 0);
+		var error = new Error("mapfix-shim: " + message);
+		reportToLightroom(error);
+		window.setTimeout(function () { throw error; }, 0);
+	}
+
+	// Lightroom's map page defines callCallback(); its "onError" switches the map to offline.
+	function reportToLightroom(e) {
+		try {
+			if (typeof window.callCallback === "function") {
+				// single line: Lightroom's callCallback() doesn't escape line breaks
+				var oneLine = function (v) { return String(v || "").replace(/[\r\n]+\s*/g, " | "); };
+				window.callCallback("onError", oneLine(e && e.message), oneLine(e && e.name), 0, oneLine(e && e.stack));
+			}
+		} catch (ignored) {
+			// nothing else to do
+		}
 	}
 
 	function loadStylesheet(href, integrity, done) {
@@ -2101,8 +2125,18 @@
 		if (callbackName) {
 			loadLeaflet(function () {
 				var callback = window[callbackName];
-				if (typeof callback === "function") callback();
-				else warn("callback " + callbackName + " not found");
+				if (typeof callback !== "function") {
+					warn("callback " + callbackName + " not found");
+					return;
+				}
+				try {
+					callback();
+				} catch (e) {
+					// The map couldn't be set up. Tell Lightroom directly, so it shows "Map is
+					// offline" instead of an empty map, and rethrow for window.onerror.
+					reportToLightroom(e);
+					rethrowAsync(e);
+				}
 			});
 		}
 	}
